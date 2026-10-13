@@ -1,51 +1,63 @@
 # ✦ Astra Music Player
 
-A sleek, modern, dark-mode desktop music player inspired by **Astra**. Built from scratch in Python using **CustomTkinter** for contemporary aesthetics, **python-mpv** for low-latency media decoding, and **mutagen** for extracting rich audio metadata and embedded album art.
+A sleek, modern, dark-mode desktop music player inspired by **Astra**. Built from scratch in Python by **Shivam Kumar Sinha**, featuring contemporary glassmorphic aesthetics, low-latency audio playback, and rich ID3 metadata extraction.
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![Python: 3.10+](https://img.shields.io/badge/Python-3.10%2B-blue.svg)](https://www.python.org/)
+[![GUI: CustomTkinter](https://img.shields.io/badge/GUI-CustomTkinter-7c3aed.svg)](https://github.com/TomSchimansky/CustomTkinter)
+[![Engine: python--mpv](https://img.shields.io/badge/Audio-python--mpv-06b6d4.svg)](https://github.com/jaseg/python-mpv)
+
+---
+
+## 👨‍💻 Author & Attribution
+
+**Astra Music Player** is custom-designed and developed by **Shivam Kumar Sinha**.
 
 ---
 
 ## ✨ Features (Phase 1 MVP)
 
-- **Astra Dark Aesthetic**: Glassmorphic slate dark mode with glowing Electric Violet (`#8b5cf6`) and Cosmic Cyan (`#06b6d4`) accents.
-- **Embedded Album Art Display**: Automatic ID3 APIC & Vorbis picture extraction via Mutagen with high-res Lanczos rendering.
-- **Central Play / Pause Control**: Prominent, responsive playback button with hover effects and state indication.
-- **Robust MPV Playback**: Low-latency playback powered by `libmpv` with real-time `time-pos` observers.
-- **Interactive Scrubber**: Seek to any timestamp smoothly by dragging the progress slider.
-- **Volume & Jump Controls**: Volume slider (0-100%) and quick 5-second jump forward/backward buttons.
-- **Modular Architecture**: Clean separation between Audio Engine, Metadata Extractor, Design System, and GUI.
-- **Python 3 Talisman**: Features `import antigravity`!
+- **Sleek Astra Dark Aesthetic**: Deep obsidian theme (`#090d16`) with electric violet (`#8b5cf6`) and cosmic cyan (`#06b6d4`) glowing accents.
+- **Embedded Album Art Renderer**: Extracts ID3 APIC frames, MP4 covr, and Vorbis picture blocks via Mutagen and displays them in a high-res rounded showcase card.
+- **Central Play / Pause Control**: Prominent, animated playback button with state toggling (`▶` / `⏸`) and hover effects.
+- **Robust MPV Decoding**: Hardware-accelerated, gapless media playback powered by `python-mpv` and native `libmpv`.
+- **Interactive Scrubber**: Real-time progress bar with live timestamp tracking and drag-and-drop seek support.
+- **Volume & Navigation Controls**: 0–100% volume slider with dynamic icons (`🔊`, `🔉`, `🔇`) and 5-second jump controls (`⏮`, `⏭`).
+- **Thread-Safe Architecture**: Uses a decoupled `queue.Queue` event polling pipeline to keep the GUI responsive and prevent Tkinter thread deadlocks.
+- **Keyboard Shortcuts**: Native hotkey support for seamless desktop playback.
+- **Python 3 Magic**: Includes `import antigravity`!
 
 ---
 
-## 🏗 Project Architecture
+## 🏗 Architecture & Codebase Layout
 
 ```
 Music player/
 ├── core/
-│   ├── __init__.py
-│   ├── audio_engine.py       # High-level wrapper over python-mpv (seeking, volume, observers)
-│   └── metadata.py           # Mutagen-based ID3/Vorbis tag & album art parser
+│   ├── __init__.py           # Core module interfaces
+│   ├── audio_engine.py       # MPV audio controller (events, seeking, volume, observers)
+│   └── metadata.py           # Mutagen ID3, FLAC, and APIC album art extractor
 ├── gui/
-│   ├── __init__.py
-│   ├── theme.py              # Astra color palette & design tokens
-│   └── main_window.py        # CustomTkinter GUI components & state binding
+│   ├── __init__.py           # GUI package exports
+│   ├── theme.py              # Astra design tokens & color palette
+│   └── main_window.py        # CustomTkinter interface with thread-safe event queue
 ├── assets/
-│   ├── sample.mp3            # Default demo MP3 with embedded tags & cover
-│   └── default_cover.jpg     # Fallback cosmic album cover
-├── lib/                      # Bundled shared libraries for zero-config Linux run
-├── main.py                   # Application entrypoint (boots GUI & handles CLI arguments)
-├── requirements.txt          # Python package requirements
-├── .gitignore                # Clean repository rules
-└── README.md                 # Project documentation
+│   ├── sample.mp3            # Bundled demo audio file with embedded metadata
+│   └── default_cover.jpg     # Sleek cosmic fallback cover art
+├── main.py                   # Main entrypoint (boots GUI & parses CLI args)
+├── requirements.txt          # Python library dependencies
+├── .gitignore                # Comprehensive Python repository ignore rules
+├── LICENSE                   # MIT License (Shivam Kumar Sinha)
+└── README.md                 # Complete documentation
 ```
 
 ---
 
-## 🚀 Installation & Setup
+## 🚀 Getting Started
 
-### 1. System Dependencies (`libmpv`)
+### 1. Prerequisites (Native `libmpv`)
 
-`python-mpv` uses native `libmpv` for audio decoding. Ensure `libmpv` is available on your operating system:
+`python-mpv` interfaces with the native `libmpv` shared library. Install it using your operating system's package manager:
 
 #### **Linux (Debian / Ubuntu / Kali)**
 ```bash
@@ -53,7 +65,7 @@ sudo apt update
 sudo apt install -y libmpv-dev libmpv2 mpv
 ```
 
-#### **Linux (Arch / Fedora)**
+#### **Linux (Arch Linux / Fedora)**
 ```bash
 # Arch Linux
 sudo pacman -S mpv
@@ -68,56 +80,85 @@ brew install mpv
 ```
 
 #### **Windows**
-Download the `mpv-dev` build from [mpv.io](https://mpv.io/installation/) or SourceForge, and place `mpv-2.dll` (or `libmpv-2.dll`) either in your system `PATH` or directly in the project directory.
+1. Download a precompiled `mpv-dev` Windows build from [mpv.io](https://mpv.io/installation/).
+2. Extract and place `mpv-2.dll` (or `libmpv-2.dll`) either in your Windows `PATH` or directly inside the `Music player/` directory.
 
 ---
 
-### 2. Python Environment Setup
+### 2. Virtual Environment & Dependencies
 
-Create an isolated virtual environment and install the required Python packages:
+Clone the repository and set up a virtual environment:
 
 ```bash
-# Create virtual environment
+# 1. Clone the repository
+git clone https://github.com/your-username/music-player.git
+cd "music-player"
+
+# 2. Create a virtual environment
 python3 -m venv .venv
 
-# Activate the virtual environment
+# 3. Activate the virtual environment
 # On Linux / macOS:
 source .venv/bin/activate
 # On Windows:
 # .venv\Scripts\activate
 
-# Upgrade pip & install dependencies
+# 4. Install dependencies
 pip install -r requirements.txt
 ```
 
 ---
 
-## 🎵 Running the Player
+## 🎵 Running the Music Player
 
-Launch the player using the bundled sample track:
-
+### Launch with Default Demo Track
 ```bash
 python main.py
 ```
+This loads the bundled sample track (*"Astra Horizon" by Antigravity Synth*) with embedded cover art.
 
-Or pass any audio file directly from the command line:
-
+### Launch with Any Local Audio File
+You can pass any audio file path directly through the command line:
 ```bash
-python main.py ~/Music/favorite_song.mp3
+python main.py /path/to/your_song.mp3
 ```
 
-You can also click the **"📂 Open File"** button inside the app to load any `.mp3`, `.flac`, `.wav`, `.ogg`, or `.m4a` file.
-
-### ⌨ Keyboard Shortcuts
-- `Space`: Toggle Play / Pause
-- `Left Arrow`: Jump backward 5 seconds
-- `Right Arrow`: Jump forward 5 seconds
+### Loading Music Inside the App
+Click the **"📂 Open File"** button in the top header to browse and open `.mp3`, `.flac`, `.wav`, `.ogg`, or `.m4a` files.
 
 ---
 
-## 🗺 Roadmap (Upcoming Phases)
+## ⌨ Desktop Keyboard Shortcuts
 
-- [ ] **Phase 2**: Playlist & Queue management (drag-and-drop support, shuffle, repeat modes).
-- [ ] **Phase 3**: Real-time frequency spectrum visualizer (FFT-based animated audio wave).
-- [ ] **Phase 4**: 10-band Graphic Equalizer & Bass Boost presets.
-- [ ] **Phase 5**: Mini-player overlay mode with system media notifications (`mpris` / Windows SMTC).
+| Shortcut | Action |
+| :--- | :--- |
+| `Space` | Toggle Play / Pause |
+| `Left Arrow` (`←`) | Jump Backward 5 seconds |
+| `Right Arrow` (`→`) | Jump Forward 5 seconds |
+
+---
+
+## 🛠 Technology Stack
+
+- **Language**: Python 3.10+
+- **GUI Framework**: [CustomTkinter](https://github.com/TomSchimansky/CustomTkinter)
+- **Audio Engine**: [python-mpv](https://github.com/jaseg/python-mpv) / `libmpv`
+- **Metadata & Tags**: [Mutagen](https://github.com/quodlibet/mutagen)
+- **Image Processing**: [Pillow](https://python-pillow.org/)
+
+---
+
+## 🗺 Roadmap
+
+- [ ] **Phase 2**: Playlist and queue manager with drag-and-drop song import.
+- [ ] **Phase 3**: Real-time FFT audio visualizer (neon frequency wave).
+- [ ] **Phase 4**: 10-band equalizer presets (Bass Boost, Acoustic, Rock, Vocal).
+- [ ] **Phase 5**: Compact floating mini-player mode & system tray integration.
+
+---
+
+## 📄 License
+
+Distributed under the **MIT License**. See [`LICENSE`](LICENSE) for details.
+
+Developed with ❤️ by **Shivam Kumar Sinha**.
