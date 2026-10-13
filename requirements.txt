@@ -1,0 +1,9 @@
+# Core GUI & Aesthetics
+customtkinter>=6.0.0
+Pillow>=10.0.0
+
+# Audio Playback Engine
+python-mpv>=1.0.8
+
+# Audio Metadata & ID3 / Album Art Extraction
+mutagen>=1.48.0
